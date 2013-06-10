@@ -3,17 +3,68 @@
   <head>
     <title>Photos</title>
     <link href="photos.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <h1>Photos</h1>
-    
     <div id="photos"></div>
 
 	<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="photos.js"></script>
     <script>
+    function returnParsedCookie(id) {
+        var array = document.cookie.split("; ")
+            object = {};
+
+        for (var i=0; i<array.length; i++) {
+            var item = array[i].split("=");
+            object[item[0]] = item[1];
+        }
+        
+        //always set a value
+        if (typeof object[id] == "undefined") {
+            setCookie("");
+            return [""];
+        } else {
+            return object[id].split(",");
+        }
+    }
+    
+    function setCookie(values) {
+        document.cookie = "favourites="+values;
+    }
+    
+    //get current favourites
+    //var favouritesArray = (typeof $.cookie("favourites") != "undefined" && $.cookie("favourites") != "") ? $.cookie("favourites").split(",") : [];
+    var favouritesArray = returnParsedCookie("favourites");
+    if (window.console) console.debug("Current favourites:");
+    if (window.console) console.debug(favouritesArray);
+
     setupPhotos(['squirrel', 'cat'], function (err, result) {
         if (err) { return console.error(err); }
+
+        $('.photo a').live("click", function() {
+            //get clicked photo source string
+            var photoSrc = $(this).prev().attr("src");
+            
+            if ($(this).hasClass("icon-heart-empty")) {
+                $(this).attr("class", "icon-heart");
+
+                //add to cookie
+                if (favouritesArray.indexOf(photoSrc) == -1) favouritesArray.push(photoSrc);
+                
+            } else {
+                $(this).attr("class", "icon-heart-empty");
+                
+                //remove from cookie
+                var index = favouritesArray.indexOf(photoSrc);
+                favouritesArray.splice(index, 1);
+            }
+            
+            //update cookie values\
+            setCookie(favouritesArray.join(","));
+            if (window.console) console.debug(returnParsedCookie("favourites"));
+        });
     });
     </script>
   </body>

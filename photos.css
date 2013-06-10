@@ -13,10 +13,35 @@ body {
     margin: 0 2px 2px 0;
     overflow: hidden;
     height: 160px;
+    
+    position: relative;
 }
 
 .photo,
 .photo img {
     min-width: 160px;
     max-width: 240px;
+}
+
+
+
+
+
+
+
+.photo .icon-heart,
+.photo .icon-heart-empty {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 30px;
+    color: white;
+    text-shadow: 0 0 2px #666;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+.photo .icon-heart:hover,
+.photo .icon-heart-empty:hover {
+    color: red;
 }

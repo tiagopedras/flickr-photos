@@ -67,6 +67,17 @@ var setupPhotos = (function ($) {
             var elm = document.createElement('div');
             elm.className = 'photo';
             elm.appendChild(img);
+            
+            
+            
+            var like_button = document.createElement('a');
+            if (favouritesArray.indexOf(img.src) > -1) like_button.className = 'icon-heart';
+            else                                       like_button.className = 'icon-heart-empty';
+            elm.appendChild(like_button);
+
+
+
+
             holder.appendChild(elm);
         };
     }
