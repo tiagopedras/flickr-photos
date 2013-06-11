@@ -89,7 +89,8 @@ var setupPhotos = (function ($) {
         loadAllPhotos(tags, max_per_tag, function (err, items) {
             if (err) { return callback(err); }
 
-            each(items.map(renderPhoto), imageAppender('photos'));
+            setTimeout(function() { each(items.map(renderPhoto), imageAppender('photos')); }, 0);
+            setTimeout(function() { if ($('#photos').height() < window.innerHeight) setup(tags, callback); }, 0);
             callback();
         });
     };
