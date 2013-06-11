@@ -21,7 +21,7 @@ var setupPhotos = (function ($) {
         window[callback_name] = function (data) {
             delete window[callback_name];
             var i;
-            for (i = 0; i < max; i += 1) {
+            for (i = 0; i < data.items.length; i += 1) {
                 photos.push(data.items[i].media.m);
             }
             callback(null, photos);
@@ -64,21 +64,21 @@ var setupPhotos = (function ($) {
     function imageAppender (id) {
         var holder = document.getElementById(id);
         return function (img) {
-            var elm = document.createElement('div');
-            elm.className = 'photo';
-            elm.appendChild(img);
-            
-            
-            
-            var like_button = document.createElement('a');
-            if (favouritesArray.indexOf(img.src) > -1) like_button.className = 'icon-heart';
-            else                                       like_button.className = 'icon-heart-empty';
-            elm.appendChild(like_button);
-
-
-
-
-            holder.appendChild(elm);
+            //ONLY ADD IF CONTAINER IS SMALLER THAN WINDOW HEIGHT
+            if ($('#photos').height() < window.innerHeight) {
+                var elm = document.createElement('div');
+                elm.className = 'photo';
+                elm.appendChild(img);
+                
+                //ADD FAV BUTTON                
+                var like_button = document.createElement('a');
+                if (favouritesArray.indexOf(img.src) > -1) like_button.className = 'icon-heart';
+                else                                       like_button.className = 'icon-heart-empty';
+                elm.appendChild(like_button);
+    
+    
+                holder.appendChild(elm);
+            }
         };
     }
 
@@ -89,8 +89,7 @@ var setupPhotos = (function ($) {
         loadAllPhotos(tags, max_per_tag, function (err, items) {
             if (err) { return callback(err); }
 
-            setTimeout(function() { each(items.map(renderPhoto), imageAppender('photos')); }, 0);
-            setTimeout(function() { if ($('#photos').height() < window.innerHeight) setup(tags, callback); }, 0);
+            each(items.map(renderPhoto), imageAppender('photos'));
             callback();
         });
     };
